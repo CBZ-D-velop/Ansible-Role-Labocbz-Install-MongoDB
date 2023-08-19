@@ -149,6 +149,11 @@ Here you can put your change to keep a trace of your work and decisions.
 ### 2023-08-18: First Init
 
 * First init of this role with the bootstrap_role playbook by Lord Robin Crombez
+* Role install MongoDB
+* Repository added from based vars distribution
+* Security module enabled and admin login/password setted
+* SSL/TLS / mTLS setted
+* No cluster for now, because no working tutorial founded for now
 
 ## Authors
 
