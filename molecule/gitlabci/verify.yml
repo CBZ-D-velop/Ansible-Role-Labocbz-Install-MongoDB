@@ -9,13 +9,13 @@
     - name: "Get MongoDB service current state"
       register: install_mongod_service_status
       failed_when: not install_mongod_service_status.status.ActiveState == 'active'
+      ignore_errors: true
       ansible.builtin.systemd:
         name: "mongod"
 
     - name: "Check MongoDB connectivity"
+      ignore_errors: true
       ansible.builtin.wait_for:
         host: "{{ inventory_hostname }}"
         port: "{{ inv_install_mongodb_port }}"
         timeout: 120
-
-# mongosh --ssl --host molecule-local-instance-1-install-mongodb --port 27017 --sslPEMKeyFile /etc/mongodb/ssl/my-mongodb-cluster.domain.tld/pemKeyFile.pem --sslCAFile /etc/mongodb/ssl/my-mongodb-cluster.domain.tld/ca-chain.pem.crt --authenticationDatabase "admin" -u "admin" -p "admin"

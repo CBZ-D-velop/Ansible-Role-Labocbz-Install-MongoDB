@@ -17,5 +17,3 @@
         host: "{{ inventory_hostname }}"
         port: "{{ inv_install_mongodb_port }}"
         timeout: 120
-
-# mongosh --ssl --host molecule-local-instance-1-install-mongodb --port 27017 --sslPEMKeyFile /etc/mongodb/ssl/my-mongodb-cluster.domain.tld/pemKeyFile.pem --sslCAFile /etc/mongodb/ssl/my-mongodb-cluster.domain.tld/ca-chain.pem.crt --authenticationDatabase "admin" -u "admin" -p "admin"
