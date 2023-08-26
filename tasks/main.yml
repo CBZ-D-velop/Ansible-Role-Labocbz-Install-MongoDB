@@ -1,1 +1,122 @@
 ---
+- name: "Install packages"
+  ansible.builtin.package:
+    update_cache: true
+    name:
+      - "apt-transport-https"
+      - "gnupg2"
+      - "wget"
+
+- name: "Install MongoDB"
+  notify:
+    - "Enable and start MongoDB"
+  block:
+    - name: "Add MongoDB GPG apt Key"
+      ansible.builtin.apt_key:
+        url: "https://pgp.mongodb.com/server-{{ install_mongodb_version }}.asc"
+
+    - name: "Add MongoDB Repository"
+      ansible.builtin.apt_repository:
+        repo: "deb http://repo.mongodb.org/apt/{{ ansible_distribution | lower }} {{ install_mongodb_distribution_release }}/mongodb-org/{{ install_mongodb_version }} main"
+
+    - name: "Update apt and install MongoDB"
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - "mongodb-org"
+
+- name: "Configure MongoDB"
+  notify: "Restart MongoDB"
+  block:
+    - name: "Check if the DB directory exist"
+      register: file_check
+      ansible.builtin.stat:
+        path: "{{ install_mongodb_db_path }}"
+
+    - name: "Create DB directory"
+      when: not file_check.stat.exists
+      ansible.builtin.file:
+        path: "{{ install_mongodb_db_path }}"
+        state: directory
+        recurse: yes
+        owner: "{{ install_mongodb_db_user }}"
+        group: "{{ install_mongodb_db_group }}"
+        mode: "0755"
+
+    - name: "Check if the log directory exist"
+      register: file_check
+      ansible.builtin.stat:
+        path: "{{ install_mongodb_log_path }}"
+
+    - name: "Create Log directory"
+      when: not file_check.stat.exists
+      ansible.builtin.file:
+        path: "{{ install_mongodb_log_path }}"
+        state: directory
+        recurse: yes
+        owner: "{{ install_mongodb_db_user }}"
+        group: "{{ install_mongodb_db_group }}"
+        mode: "0755"
+
+    - name: "Import MongoDB configuration file"
+      ansible.builtin.template:
+        src: "templates/mongod.conf.j2"
+        dest: "/etc/mongod.conf"
+        lstrip_blocks: yes
+        owner: "{{ install_mongodb_db_user }}"
+        group: "{{ install_mongodb_db_group }}"
+        mode: "0644"
+
+    - name: "Handle SSL/mTLS"
+      when: install_mongodb_ssl | default(false)
+      block:
+        - name: "Ajust permissions on keyfile"
+          when: file_check.stat.exists
+          ansible.builtin.file:
+            path: "{{ install_mongodb_keyfile }}"
+            owner: "{{ install_mongodb_db_user }}"
+            group: "{{ install_mongodb_db_group }}"
+            mode: "400"
+            state: touch
+
+        - name: "Create PEMKeyFile"
+          register: output
+          changed_when: output.rc != 0
+          ansible.builtin.shell: "cat {{ install_mongodb_ssl_cert }} {{ install_mongodb_ssl_key }} > {{ install_mongodb_ssl_pem_key_file }}"
+
+        - name: "Generate a Key"
+          run_once: true
+          register: key_file_content
+          changed_when: key_file_content.rc != 0
+          ansible.builtin.command: "openssl rand -base64 768"
+
+        - name: "Insert Key in file"
+          register: key_file_content
+          changed_when: key_file_content.rc != 0
+          ansible.builtin.shell: "echo '{{ key_file_content.stdout }}' > {{ install_mongodb_keyfile }}"
+
+- name: "Handle administration password setting"
+  block:
+    - name: "Set Admin password: SSL/mTLS"
+      when: (install_mongodb_ssl | default(false)) and (install_mongodb_ssl_client_auth | default(false))
+      register: output
+      changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+      failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+      ansible.builtin.shell: >
+        mongosh --tls --host {{ inventory_hostname }} --port {{ install_mongodb_port }} --tlsCertificateKeyFile {{ install_mongodb_ssl_pem_key_file }} --tlsCAFile {{ install_mongodb_ssl_ca }} --eval 'db.createUser({user:"{{ install_mongodb_admin_login }}",pwd:"{{ install_mongodb_admin_password }}",roles:[{ role:"userAdminAnyDatabase",db:"admin" },{ role: "readWriteAnyDatabase", db: "admin" }]})'
+
+    - name: "Set Admin password: SSL"
+      when: (install_mongodb_ssl | default(false)) and not (install_mongodb_ssl_client_auth | default(false))
+      register: output
+      changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+      failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+      ansible.builtin.shell: >
+        mongosh --tls --host {{ inventory_hostname }} --port {{ install_mongodb_port }} --tlsCAFile {{ install_mongodb_ssl_ca }} --eval 'db.createUser({user:"{{ install_mongodb_admin_login }}",pwd:"{{ install_mongodb_admin_password }}",roles:[{ role:"userAdminAnyDatabase",db:"admin" },{ role: "readWriteAnyDatabase", db: "admin" }]})'
+
+    - name: "Set Admin password: PLAIN"
+      when: not (install_mongodb_ssl | default(false))
+      register: output
+      changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+      failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+      ansible.builtin.shell: >
+        mongosh --host {{ inventory_hostname }} --port {{ install_mongodb_port }} --eval 'db.createUser({user:"{{ install_mongodb_admin_login }}",pwd:"{{ install_mongodb_admin_password }}",roles:[{ role:"userAdminAnyDatabase",db:"admin" },{ role: "readWriteAnyDatabase", db: "admin" }]})'

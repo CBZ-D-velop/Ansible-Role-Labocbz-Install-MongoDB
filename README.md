@@ -14,9 +14,20 @@
 ![Tag: Debian](https://img.shields.io/badge/Tech-Debian-orange)
 ![Tag: MongoDB](https://img.shields.io/badge/Tech-MongoDB-orange)
 ![Tag: SSL/TLS](https://img.shields.io/badge/Tech-SSL%2FTLS-orange)
-![Tag: Cluster](https://img.shields.io/badge/Tech-Cluster-orange)
 
 An Ansible role to install and configure MongoDB on your host.
+
+The Ansible role offers seamless deployment and configuration of MongoDB, tailored to your specific version requirements. This role streamlines the process of setting up MongoDB while providing a range of customizable options to enhance security and communication.
+
+With the ability to define the MongoDB version this role ensures you have the latest features and improvements at your fingertips. The installation is adapted to your system's architecture, intelligently determined by factors such as the distribution release and architecture of your machine.
+
+Enabling robust security measures, this role facilitates the setup of SSL and mTLS encryption. Leveraging SSL certificates located in designated paths, you can be confident in securing your MongoDB deployment. Mutual authentication is also supported for enhanced verification, ensuring secure communication across your network.
+
+Additionally, the role introduces an administrative layer of protection. A super administrator, configured with the credentials "admin" and "admin," empowers you to manage and oversee your MongoDB deployment with utmost authority and control. The role prioritizes security, empowering you to confidently manage your MongoDB database environment.
+
+It's important to note that this role currently does not support cluster mode configuration. However, rest assured that this feature is actively being developed and will soon be seamlessly integrated into the role's capabilities.
+
+In summary, this Ansible role is your trusted companion for effortlessly setting up, securing, and administering MongoDB. Experience a smooth and secure deployment process, confident in the knowledge that you're equipped with the latest version, SSL encryption, and a dedicated super administrator. Elevate your MongoDB experience with this role, simplifying your management tasks and bolstering your database's integrity.
 
 ## Folder structure
 
@@ -138,6 +149,11 @@ Here you can put your change to keep a trace of your work and decisions.
 ### 2023-08-18: First Init
 
 * First init of this role with the bootstrap_role playbook by Lord Robin Crombez
+* Role install MongoDB
+* Repository added from based vars distribution
+* Security module enabled and admin login/password setted
+* SSL/TLS / mTLS setted
+* No cluster for now, because no working tutorial founded for now
 
 ## Authors
 
@@ -147,3 +163,7 @@ Here you can put your change to keep a trace of your work and decisions.
 
 * [Ansible role documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html)
 * [Ansible Molecule documentation](https://molecule.readthedocs.io/)
+* [Install MongoDB Community Edition on Debian](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-debian/#install-mongodb-community-edition-on-debian)
+* [Internal/Membership Authentication](https://www.mongodb.com/docs/manual/core/security-internal-authentication/)
+* [TLS/SSL Configuration for Clients](https://www.mongodb.com/docs/v3.0/tutorial/configure-ssl-clients/)
+* [Enable Access Control](https://www.mongodb.com/docs/manual/tutorial/enable-authentication/#std-label-enable-access-control)
