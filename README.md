@@ -155,6 +155,13 @@ Here you can put your change to keep a trace of your work and decisions.
 * SSL/TLS / mTLS setted
 * No cluster for now, because no working tutorial founded for now
 
+### 2023-10-06: New CICD, new Images
+
+* New CI/CD scenario name
+* Molecule now use remote Docker image by Lord Robin Crombez
+* Molecule now use custom Docker image in CI/CD by env vars
+* New CICD with needs and optimization
+
 ## Authors
 
 * Lord Robin Crombez
