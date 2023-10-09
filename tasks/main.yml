@@ -70,19 +70,20 @@
     - name: "Handle SSL/mTLS"
       when: install_mongodb_ssl | default(false)
       block:
+        - name: "Create PEMKeyFile"
+          register: output
+          changed_when: output.rc != 0
+          ansible.builtin.shell: "cat {{ install_mongodb_ssl_cert }} {{ install_mongodb_ssl_key }} > {{ install_mongodb_ssl_pem_key_file }}"
+
         - name: "Ajust permissions on keyfile"
-          when: file_check.stat.exists
+          register: output
+          changed_when: output.size <= 0
           ansible.builtin.file:
             path: "{{ install_mongodb_keyfile }}"
             owner: "{{ install_mongodb_db_user }}"
             group: "{{ install_mongodb_db_group }}"
             mode: "400"
             state: touch
-
-        - name: "Create PEMKeyFile"
-          register: output
-          changed_when: output.rc != 0
-          ansible.builtin.shell: "cat {{ install_mongodb_ssl_cert }} {{ install_mongodb_ssl_key }} > {{ install_mongodb_ssl_pem_key_file }}"
 
         - name: "Generate a Key"
           run_once: true
