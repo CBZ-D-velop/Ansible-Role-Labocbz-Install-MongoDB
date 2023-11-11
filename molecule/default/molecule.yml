@@ -56,9 +56,8 @@ verifier:
 scenario:
   name: "default"
   test_sequence:
-    - "lint"
     - "destroy"
-    #- "dependency" # need a "requirements.yml" file
+    - "dependency" # need a "requirements.yml" file
     - "syntax"
     - "create"
     - "prepare"

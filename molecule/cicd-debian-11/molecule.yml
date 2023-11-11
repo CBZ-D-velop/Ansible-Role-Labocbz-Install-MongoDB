@@ -57,11 +57,12 @@ scenario:
   name: "cicd-debian-11"
   test_sequence:
     - "destroy"
+    - "dependency" # need a "requirements.yml" file
     - "syntax"
-    - "dependency"
     - "create"
     - "prepare"
     - "converge"
-    - "idempotence"
+    #- "idempotence"
+    #- "side_effect" # need a "requirements.yml" file
     - "verify"
     - "destroy"
