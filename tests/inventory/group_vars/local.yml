@@ -24,6 +24,7 @@ inv_install_mongodb_ssl_key: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-clus
 inv_install_mongodb_ssl_pem_key_file: "/etc/mongodb-pemKeyFile.pem"
 inv_install_mongodb_ssl_client_auth: true
 inv_install_mongodb_ssl_ca: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
+inv_install_mongodb_ssl_ca_file: "/etc/mongodb-ca.pem"
 
 inv_install_mongodb_admin_login: "admin"
 inv_install_mongodb_admin_password: "admin"
