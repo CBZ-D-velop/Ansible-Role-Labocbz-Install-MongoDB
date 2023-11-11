@@ -21,7 +21,7 @@ inv_install_mongodb_port: 27017
 inv_install_mongodb_ssl: true
 inv_install_mongodb_ssl_cert: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.crt"
 inv_install_mongodb_ssl_key: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.key"
-inv_install_mongodb_ssl_pem_key_file: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/pemKeyFile.pem"
+inv_install_mongodb_ssl_pem_key_file: "/etc/mongodb-pemKeyFile.pem"
 inv_install_mongodb_ssl_client_auth: true
 inv_install_mongodb_ssl_ca: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
 

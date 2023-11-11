@@ -66,11 +66,12 @@
         group: "{{ install_mongodb_db_group }}"
         mode: "0644"
 
-- name: "Create PEMKeyFile"
+- name: "Create PEMKeyFile / CA"
   when: install_mongodb_ssl | default(false)
   register: output
   changed_when: output.rc != 0
-  ansible.builtin.shell: "cat {{ install_mongodb_ssl_cert }} {{ install_mongodb_ssl_key }} > {{ install_mongodb_ssl_pem_key_file }}"
+  ansible.builtin.shell: >
+    cat {{ install_mongodb_ssl_cert }} {{ install_mongodb_ssl_key }} > {{ install_mongodb_ssl_pem_key_file }} && cat {{ install_mongodb_ssl_ca }} > {{ install_mongodb_ssl_ca_file }}
 
 - name: "Flush handlers"
   ansible.builtin.meta: flush_handlers
@@ -83,7 +84,7 @@
       changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
       failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
       ansible.builtin.shell: >
-        mongosh --tls --host {{ inventory_hostname }} --port {{ install_mongodb_port }} --tlsCertificateKeyFile {{ install_mongodb_ssl_pem_key_file }} --tlsCAFile {{ install_mongodb_ssl_ca }} --eval 'use admin' --eval 'db.createUser({user:"{{ install_mongodb_admin_login }}",pwd:"{{ install_mongodb_admin_password }}",roles:[{ role:"userAdminAnyDatabase",db:"admin" },{ role: "readWriteAnyDatabase", db: "admin" }]})'
+        mongosh --tls --host {{ inventory_hostname }} --port {{ install_mongodb_port }} --tlsCertificateKeyFile {{ install_mongodb_ssl_pem_key_file }} --tlsCAFile {{ install_mongodb_ssl_ca_file }} --eval 'use admin' --eval 'db.createUser({user:"{{ install_mongodb_admin_login }}",pwd:"{{ install_mongodb_admin_password }}",roles:[{ role:"userAdminAnyDatabase",db:"admin" },{ role: "readWriteAnyDatabase", db: "admin" }]})'
 
     - name: "Set Admin password: SSL"
       when: (install_mongodb_ssl | default(false)) and not (install_mongodb_ssl_client_auth | default(false))
@@ -91,7 +92,7 @@
       changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
       failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
       ansible.builtin.shell: >
-        mongosh --tls --host {{ inventory_hostname }} --port {{ install_mongodb_port }} --tlsCAFile {{ install_mongodb_ssl_ca }} --eval 'use admin' --eval 'db.createUser({user:"{{ install_mongodb_admin_login }}",pwd:"{{ install_mongodb_admin_password }}",roles:[{ role:"userAdminAnyDatabase",db:"admin" },{ role: "readWriteAnyDatabase", db: "admin" }]})'
+        mongosh --tls --host {{ inventory_hostname }} --port {{ install_mongodb_port }} --tlsCAFile {{ install_mongodb_ssl_ca_file }} --eval 'use admin' --eval 'db.createUser({user:"{{ install_mongodb_admin_login }}",pwd:"{{ install_mongodb_admin_password }}",roles:[{ role:"userAdminAnyDatabase",db:"admin" },{ role: "readWriteAnyDatabase", db: "admin" }]})'
 
     - name: "Set Admin password: PLAIN"
       when: not (install_mongodb_ssl | default(false))

@@ -17,9 +17,10 @@ install_mongodb_port: 27017
 install_mongodb_ssl: true
 install_mongodb_ssl_cert: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.crt"
 install_mongodb_ssl_key: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.key"
-install_mongodb_ssl_pem_key_file: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/pemKeyFile.pem"
+install_mongodb_ssl_pem_key_file: "/etc/mongodb-pemKeyFile.pem"
 install_mongodb_ssl_client_auth: true
 install_mongodb_ssl_ca: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
+install_mongodb_ssl_ca_file: "/etc/mongodb-ca.pem"
 
 install_mongodb_admin_login: "admin"
 install_mongodb_admin_password: "admin"

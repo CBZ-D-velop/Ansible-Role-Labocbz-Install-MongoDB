@@ -130,9 +130,10 @@ install_mongodb_port: 27017
 install_mongodb_ssl: true
 install_mongodb_ssl_cert: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.crt"
 install_mongodb_ssl_key: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.key"
-install_mongodb_ssl_pem_key_file: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/pemKeyFile.pem"
+install_mongodb_ssl_pem_key_file: "/etc/mongodb-pemKeyFile.pem"
 install_mongodb_ssl_client_auth: true
 install_mongodb_ssl_ca: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
+install_mongodb_ssl_ca_file: "/etc/mongodb-ca.pem"
 
 install_mongodb_admin_login: "admin"
 install_mongodb_admin_password: "admin"
@@ -173,6 +174,7 @@ inv_install_mongodb_ssl_key: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-clus
 inv_install_mongodb_ssl_pem_key_file: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/pemKeyFile.pem"
 inv_install_mongodb_ssl_client_auth: true
 inv_install_mongodb_ssl_ca: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
+inv_install_mongodb_ssl_ca_file: "/etc/mongodb-ca.pem"
 
 inv_install_mongodb_admin_login: "admin"
 inv_install_mongodb_admin_password: "admin"
@@ -213,6 +215,7 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     install_mongodb_ssl_ca: "{{ inv_install_mongodb_ssl_ca }}"
     install_mongodb_admin_login: "{{ inv_install_mongodb_admin_login }}"
     install_mongodb_admin_password: "{{ inv_install_mongodb_admin_password }}"
+    inv_install_mongodb_ssl_ca_file: "{{ inv_install_mongodb_ssl_ca_file }}
   ansible.builtin.include_role:
     name: "labocbz.install_mongodb"
 ```

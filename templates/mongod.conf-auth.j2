@@ -46,7 +46,7 @@ net:
       disabledProtocols: TLS1_0,TLS1_1
       certificateKeyFile: {{ install_mongodb_ssl_pem_key_file }}
 {% if install_mongodb_ssl_client_auth | default(false) %}
-      CAFile: {{ install_mongodb_ssl_ca }}
+      CAFile: {{ install_mongodb_ssl_ca_file }}
 {% endif %}
 {% endif %}
 
