@@ -215,7 +215,7 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
     install_mongodb_ssl_ca: "{{ inv_install_mongodb_ssl_ca }}"
     install_mongodb_admin_login: "{{ inv_install_mongodb_admin_login }}"
     install_mongodb_admin_password: "{{ inv_install_mongodb_admin_password }}"
-    inv_install_mongodb_ssl_ca_file: "{{ inv_install_mongodb_ssl_ca_file }}
+    inv_install_mongodb_ssl_ca_file: "{{ inv_install_mongodb_ssl_ca_file }}"
   ansible.builtin.include_role:
     name: "labocbz.install_mongodb"
 ```
