@@ -112,7 +112,31 @@ Some vars a required to run this role:
 
 ```YAML
 ---
-your defaults vars here
+install_mongodb_version: "7.0"
+install_mongodb_distribution_release: "{{ ansible_distribution_release | lower }}"
+install_mongodb_architecture: "{{ ansible_architecture | lower }}"
+
+install_mongodb_db_user: "mongodb"
+install_mongodb_db_group: "mongodb"
+
+install_mongodb_db_path: "/var/lib/mongodb"
+install_mongodb_log_path: "/var/log/mongodb"
+install_mongodb_log_file: "{{ install_mongodb_log_path }}/mongod.log"
+install_mongodb_ssl_path: "/etc/mongodb/ssl"
+
+install_mongodb_bind: "0.0.0.0"
+install_mongodb_port: 27017
+
+install_mongodb_ssl: true
+install_mongodb_ssl_cert: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.crt"
+install_mongodb_ssl_key: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.key"
+install_mongodb_ssl_pem_key_file: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/pemKeyFile.pem"
+install_mongodb_ssl_client_auth: true
+install_mongodb_ssl_ca: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
+
+install_mongodb_admin_login: "admin"
+install_mongodb_admin_password: "admin"
+
 ```
 
 The best way is to modify these vars by copy the ./default/main.yml file into the ./vars and edit with your personnals requirements.
@@ -124,13 +148,41 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 ```YAML
 # From inventory
 ---
-all vars from to put/from your inventory
+inv_install_mongodb_prepare_host_users:
+  - login: "mongodb"
+    group: "mongodb"
+
+inv_install_mongodb_version: "7.0"
+inv_install_mongodb_distribution_release: "{{ ansible_distribution_release | lower }}"
+inv_install_mongodb_architecture: "{{ ansible_architecture | lower }}"
+
+inv_install_mongodb_db_user: "mongodb"
+inv_install_mongodb_db_group: "mongodb"
+
+inv_install_mongodb_db_path: "/var/lib/mongodb"
+inv_install_mongodb_log_path: "/var/log/mongodb"
+inv_install_mongodb_log_file: "{{ inv_install_mongodb_log_path }}/mongod.log"
+inv_install_mongodb_ssl_path: "/etc/mongodb/ssl"
+
+inv_install_mongodb_bind: "0.0.0.0"
+inv_install_mongodb_port: 27017
+
+inv_install_mongodb_ssl: true
+inv_install_mongodb_ssl_cert: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.crt"
+inv_install_mongodb_ssl_key: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.key"
+inv_install_mongodb_ssl_pem_key_file: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/pemKeyFile.pem"
+inv_install_mongodb_ssl_client_auth: true
+inv_install_mongodb_ssl_ca: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
+
+inv_install_mongodb_admin_login: "admin"
+inv_install_mongodb_admin_password: "admin"
+
 ```
 
 ```YAML
 # From AWX / Tower
 ---
-all vars from to put/from AWX / Tower
+
 ```
 
 ### Run
@@ -138,8 +190,31 @@ all vars from to put/from AWX / Tower
 To run this role, you can copy the molecule/default/converge.yml playbook and add it into your playbook:
 
 ```YAML
----
-your converge.yml file here
+- name: "Include labocbz.install_mongodb"
+  tags:
+    - "labocbz.install_mongodb"
+  vars:
+    install_mongodb_version: "{{ inv_install_mongodb_version }}"
+    install_mongodb_distribution_release: "{{ inv_install_mongodb_distribution_release }}"
+    install_mongodb_architecture: "{{ inv_install_mongodb_architecture }}"
+    install_mongodb_db_user: "{{ inv_install_mongodb_db_user }}"
+    install_mongodb_db_group: "{{ inv_install_mongodb_db_group }}"
+    install_mongodb_db_path: "{{ inv_install_mongodb_db_path }}"
+    install_mongodb_log_path: "{{ inv_install_mongodb_log_path }}"
+    install_mongodb_log_file: "{{ inv_install_mongodb_log_file }}"
+    install_mongodb_ssl_path: "{{ inv_install_mongodb_ssl_path }}"
+    install_mongodb_bind: "{{ inv_install_mongodb_bind }}"
+    install_mongodb_port: "{{ inv_install_mongodb_port }}"
+    install_mongodb_ssl: "{{ inv_install_mongodb_ssl }}"
+    install_mongodb_ssl_cert: "{{ inv_install_mongodb_ssl_cert }}"
+    install_mongodb_ssl_key: "{{ inv_install_mongodb_ssl_key }}"
+    install_mongodb_ssl_pem_key_file: "{{ inv_install_mongodb_ssl_pem_key_file }}"
+    install_mongodb_ssl_client_auth: "{{ inv_install_mongodb_ssl_client_auth }}"
+    install_mongodb_ssl_ca: "{{ inv_install_mongodb_ssl_ca }}"
+    install_mongodb_admin_login: "{{ inv_install_mongodb_admin_login }}"
+    install_mongodb_admin_password: "{{ inv_install_mongodb_admin_password }}"
+  ansible.builtin.include_role:
+    name: "labocbz.install_mongodb"
 ```
 
 ## Architectural Decisions Records
@@ -161,6 +236,12 @@ Here you can put your change to keep a trace of your work and decisions.
 * Molecule now use remote Docker image by Lord Robin Crombez
 * Molecule now use custom Docker image in CI/CD by env vars
 * New CICD with needs and optimization
+
+### 2023-11-11: mTLS refacto and secure server
+
+* Server is really secured now
+* Refacto on shard (removed)
+* Refacto on mTLS
 
 ## Authors
 

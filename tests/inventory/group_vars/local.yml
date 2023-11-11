@@ -1,8 +1,11 @@
 ---
+inv_install_mongodb_prepare_host_users:
+  - login: "mongodb"
+    group: "mongodb"
+
 inv_install_mongodb_version: "7.0"
 inv_install_mongodb_distribution_release: "{{ ansible_distribution_release | lower }}"
 inv_install_mongodb_architecture: "{{ ansible_architecture | lower }}"
-
 
 inv_install_mongodb_db_user: "mongodb"
 inv_install_mongodb_db_group: "mongodb"
@@ -14,7 +17,6 @@ inv_install_mongodb_ssl_path: "/etc/mongodb/ssl"
 
 inv_install_mongodb_bind: "0.0.0.0"
 inv_install_mongodb_port: 27017
-inv_install_mongodb_replicat_setname: "{{ inventory_hostname }}"
 
 inv_install_mongodb_ssl: true
 inv_install_mongodb_ssl_cert: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.crt"
@@ -23,6 +25,5 @@ inv_install_mongodb_ssl_pem_key_file: "{{ inv_install_mongodb_ssl_path }}/my-mon
 inv_install_mongodb_ssl_client_auth: true
 inv_install_mongodb_ssl_ca: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
 
-inv_install_mongodb_keyfile: "/etc/mongodb/keyFile"
 inv_install_mongodb_admin_login: "admin"
 inv_install_mongodb_admin_password: "admin"

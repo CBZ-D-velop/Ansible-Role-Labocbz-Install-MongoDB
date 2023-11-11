@@ -17,3 +17,29 @@
         host: "{{ inventory_hostname }}"
         port: "{{ inv_install_mongodb_port }}"
         timeout: 120
+
+    - name: "Check databases"
+      block:
+        - name: "Check databases: SSL/mTLS"
+          when: (inv_install_mongodb_ssl | default(false)) and (inv_install_mongodb_ssl_client_auth | default(false))
+          register: output
+          changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+          failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+          ansible.builtin.shell: >
+            mongosh --username "{{ inv_install_mongodb_admin_login }}" --password '{{ inv_install_mongodb_admin_password }}' --tls --host {{ inventory_hostname }} --port {{ inv_install_mongodb_port }} --tlsCertificateKeyFile {{ inv_install_mongodb_ssl_pem_key_file }} --tlsCAFile {{ inv_install_mongodb_ssl_ca }} --eval 'show dbs'
+
+        - name: "Check databases: SSL"
+          when: (inv_install_mongodb_ssl | default(false)) and not (inv_install_mongodb_ssl_client_auth | default(false))
+          register: output
+          changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+          failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+          ansible.builtin.shell: >
+            mongosh --username "{{ inv_install_mongodb_admin_login }}" --password '{{ inv_install_mongodb_admin_password }}' --tls --host {{ inventory_hostname }} --port {{ inv_install_mongodb_port }} --tlsCAFile {{ inv_install_mongodb_ssl_ca }} --eval 'show dbs'
+
+        - name: "Check databases: PLAIN"
+          when: not (inv_install_mongodb_ssl | default(false))
+          register: output
+          changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+          failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
+          ansible.builtin.shell: >
+            mongosh --username "{{ inv_install_mongodb_admin_login }}" --password '{{ inv_install_mongodb_admin_password }}' --host {{ inventory_hostname }} --port {{ inv_install_mongodb_port }} --eval 'show dbs'
