@@ -1,0 +1,35 @@
+##############################
+#                            #
+# Ansible / Tower managed on #
+#                            #
+##############################
+
+[Unit]
+Description=MongoDB Database Server
+Documentation=https://docs.mongodb.org/manual
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User={{ install_mongodb_db_user }}
+Group={{ install_mongodb_db_group }}
+EnvironmentFile=-/etc/default/mongod
+Environment="MONGODB_CONFIG_OVERRIDE_NOFORK=1"
+ExecStart=/usr/bin/mongod --config /etc/mongodb/mongod.conf
+
+#RuntimeDirectory=mongodb
+
+LimitFSIZE=infinity
+LimitCPU=infinity
+LimitAS=infinity
+LimitNOFILE=64000
+LimitNPROC=64000
+LimitMEMLOCK=infinity
+TasksMax=infinity
+TasksAccounting=false
+
+# Recommended limits for mongod as specified in
+# https://docs.mongodb.com/manual/reference/ulimit/#recommended-ulimit-settings
+
+[Install]
+WantedBy=multi-user.target
