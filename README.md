@@ -246,6 +246,10 @@ Here you can put your change to keep a trace of your work and decisions.
 * Refacto on shard (removed)
 * Refacto on mTLS
 
+### 2023-12-14: System users
+
+* Role can now use system users and address groups
+
 ## Authors
 
 * Lord Robin Crombez

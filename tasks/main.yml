@@ -40,7 +40,7 @@
         recurse: yes
         owner: "{{ install_mongodb_db_user }}"
         group: "{{ install_mongodb_db_group }}"
-        mode: "0755"
+        mode: "0700"
 
     - name: "Check if the log directory exist"
       register: file_check
@@ -55,23 +55,51 @@
         recurse: yes
         owner: "{{ install_mongodb_db_user }}"
         group: "{{ install_mongodb_db_group }}"
-        mode: "0755"
+        mode: "0700"
+
+    - name: "Check if conf directory exist"
+      register: file_check
+      ansible.builtin.stat:
+        path: "/etc/mongodb"
+
+    - name: "Create conf directory"
+      when: not file_check.stat.exists
+      ansible.builtin.file:
+        path: "/etc/mongodb"
+        state: directory
+        recurse: yes
+        owner: "{{ install_mongodb_db_user }}"
+        group: "{{ install_mongodb_db_group }}"
+        mode: "0700"
 
     - name: "Import MongoDB configuration file"
       ansible.builtin.template:
         src: "templates/mongod.conf.j2"
-        dest: "/etc/mongod.conf"
+        dest: "/etc/mongodb/mongod.conf"
         lstrip_blocks: yes
         owner: "{{ install_mongodb_db_user }}"
         group: "{{ install_mongodb_db_group }}"
-        mode: "0644"
+        mode: "0700"
 
 - name: "Create PEMKeyFile / CA"
   when: install_mongodb_ssl | default(false)
   register: output
   changed_when: output.rc != 0
-  ansible.builtin.shell: >
-    cat {{ install_mongodb_ssl_cert }} {{ install_mongodb_ssl_key }} > {{ install_mongodb_ssl_pem_key_file }} && cat {{ install_mongodb_ssl_ca }} > {{ install_mongodb_ssl_ca_file }}
+  ansible.builtin.shell: |
+    cat {{ install_mongodb_ssl_cert }} {{ install_mongodb_ssl_key }} > {{ install_mongodb_ssl_pem_key_file }}
+    cat {{ install_mongodb_ssl_ca }} > {{ install_mongodb_ssl_ca_file }}
+    chown {{ install_mongodb_db_user }}:{{ install_mongodb_db_user }} {{ install_mongodb_ssl_pem_key_file }}
+    chown {{ install_mongodb_db_user }}:{{ install_mongodb_db_user }} {{ install_mongodb_ssl_key }}
+
+- name: "Import Mongodb service file"
+  notify: "Enable and start MongoDB"
+  ansible.builtin.template:
+    src: "templates/mongod.service.j2"
+    dest: "/etc/systemd/system/mongod.service"
+    mode: "0700"
+    group: "root"
+    owner: "root"
+    lstrip_blocks: yes
 
 - name: "Flush handlers"
   ansible.builtin.meta: flush_handlers
@@ -105,11 +133,11 @@
 - name: "Import MongoDB configuration file with AUTH"
   ansible.builtin.template:
     src: "templates/mongod.conf-auth.j2"
-    dest: "/etc/mongod.conf"
+    dest: "/etc/mongodb/mongod.conf"
     lstrip_blocks: yes
     owner: "{{ install_mongodb_db_user }}"
     group: "{{ install_mongodb_db_group }}"
-    mode: "0644"
+    mode: "0700"
 
 - name: "Stop MongoDB"
   register: install_mongodb_service_status
