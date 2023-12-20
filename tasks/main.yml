@@ -101,6 +101,24 @@
     owner: "root"
     lstrip_blocks: yes
 
+- name: "Fix permissions for first start / restart"
+  loop:
+    - "/etc/mongodb"
+    - "{{ install_mongodb_log_path }}"
+    - "{{ install_mongodb_db_path }}"
+    - "{{ install_mongodb_ssl_path }}"
+  loop_control:
+    loop_var: path
+  notify:
+    - "Restart MongoDB"
+  ansible.builtin.file:
+    path: "{{ path }}"
+    state: directory
+    recurse: yes
+    owner: "{{ install_mongodb_db_user }}"
+    group: "{{ install_mongodb_db_group }}"
+    mode: "0700"
+
 - name: "Flush handlers"
   ansible.builtin.meta: flush_handlers
 
