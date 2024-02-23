@@ -14,9 +14,15 @@
       ansible.builtin.apt_key:
         url: "https://pgp.mongodb.com/server-{{ install_mongodb__version }}.asc"
 
-    - name: "Add MongoDB Repository"
+    - name: "Add MongoDB Repository, Debian"
+      when: "{{ ansible_distribution | lower }}" == 'debian'
       ansible.builtin.apt_repository:
         repo: "deb http://repo.mongodb.org/apt/{{ ansible_distribution | lower }} {{ install_mongodb__distribution_release }}/mongodb-org/{{ install_mongodb__version }} main"
+
+    - name: "Add MongoDB Repository, Ubuntu"
+      when: "{{ ansible_distribution | lower }}" == 'ubuntu'
+      ansible.builtin.apt_repository:
+        repo: "deb http://repo.mongodb.org/apt/{{ ansible_distribution | lower }} {{ install_mongodb__distribution_release }}/mongodb-org/{{ install_mongodb__version }} multiverse"
 
     - name: "Update apt and install MongoDB"
       ansible.builtin.apt:
