@@ -1,7 +1,7 @@
 ---
 - name: "Enable and start MongoDB"
-  register: install_mongodb_service_status
-  changed_when: not install_mongodb_service_status.state != "started"
+  register: install_mongodb__service_status
+  changed_when: not install_mongodb__service_status.state != "started"
   throttle: 1
   ansible.builtin.service:
     name: "mongod"
@@ -10,8 +10,8 @@
     enabled: yes
 
 - name: "Restart MongoDB"
-  register: install_mongodb_service_status
-  changed_when: not install_mongodb_service_status.state != "restarted"
+  register: install_mongodb__service_status
+  changed_when: not install_mongodb__service_status.state != "restarted"
   throttle: 1
   ansible.builtin.service:
     name: "mongod"

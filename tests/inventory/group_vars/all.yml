@@ -1,0 +1,30 @@
+---
+inv_prepare_host__system_users:
+  - login: "mongodb"
+    group: "mongodb"
+
+inv_install_mongodb__version: "7.0"
+inv_install_mongodb__distribution_release: "{{ ansible_distribution_release | lower }}"
+inv_install_mongodb__architecture: "{{ ansible_architecture | lower }}"
+
+inv_install_mongodb__db_user: "mongodb"
+inv_install_mongodb__db_group: "mongodb"
+
+inv_install_mongodb__db_path: "/var/lib/mongodb"
+inv_install_mongodb__log_path: "/var/log/mongodb"
+inv_install_mongodb__log_file: "{{ inv_install_mongodb__log_path }}/mongod.log"
+inv_install_mongodb__ssl_path: "/etc/mongodb/ssl"
+
+inv_install_mongodb__bind: "0.0.0.0"
+inv_install_mongodb__port: 27017
+
+inv_install_mongodb__ssl: true
+inv_install_mongodb__ssl_cert: "{{ inv_install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/my-mongodb-server.domain.tld.pem.crt"
+inv_install_mongodb__ssl_key: "{{ inv_install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/my-mongodb-server.domain.tld.pem.key"
+inv_install_mongodb__ssl_pem_key_file: "{{ inv_install_mongodb__ssl_path }}/mongodb-pemKeyFile.pem"
+inv_install_mongodb__ssl_client_auth: true
+inv_install_mongodb__ssl_ca: "{{ inv_install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/ca-chain.pem.crt"
+inv_install_mongodb__ssl_ca_file: "{{ inv_install_mongodb__ssl_path }}/mongodb-ca.pem"
+
+inv_install_mongodb__admin_login: "admin"
+inv_install_mongodb__admin_password: "admin"
