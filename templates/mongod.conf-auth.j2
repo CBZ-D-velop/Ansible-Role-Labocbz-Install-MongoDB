@@ -11,7 +11,7 @@
 
 # Where and how to store data.
 storage:
-  dbPath: {{ install_mongodb_db_path }}
+  dbPath: {{ install_mongodb__db_path }}
 #  engine:
 #  wiredTiger:
 
@@ -19,12 +19,12 @@ storage:
 systemLog:
   destination: file
   logAppend: true
-  path: {{ install_mongodb_log_file }}
+  path: {{ install_mongodb__log_file }}
 
 # network interfaces
 net:
-  port: {{ install_mongodb_port }}
-  bindIp: {{ install_mongodb_bind }}
+  port: {{ install_mongodb__port }}
+  bindIp: {{ install_mongodb__bind }}
 
 
 # how the process runs
@@ -39,14 +39,14 @@ processManagement:
 
 #auditLog:
 
-{% if install_mongodb_ssl | default(false) %}
+{% if install_mongodb__ssl | default(false) %}
 net:
    tls:
       mode: requireTLS
       disabledProtocols: TLS1_0,TLS1_1
-      certificateKeyFile: {{ install_mongodb_ssl_pem_key_file }}
-{% if install_mongodb_ssl_client_auth | default(false) %}
-      CAFile: {{ install_mongodb_ssl_ca_file }}
+      certificateKeyFile: {{ install_mongodb__ssl_pem_key_file }}
+{% if install_mongodb__ssl_client_auth | default(false) %}
+      CAFile: {{ install_mongodb__ssl_ca_file }}
 {% endif %}
 {% endif %}
 

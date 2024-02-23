@@ -1,26 +1,26 @@
 ---
-install_mongodb_version: "7.0"
-install_mongodb_distribution_release: "{{ ansible_distribution_release | lower }}"
-install_mongodb_architecture: "{{ ansible_architecture | lower }}"
+install_mongodb__version: "7.0"
+install_mongodb__distribution_release: "{{ ansible_distribution_release | lower }}"
+install_mongodb__architecture: "{{ ansible_architecture | lower }}"
 
-install_mongodb_db_user: "mongodb"
-install_mongodb_db_group: "mongodb"
+install_mongodb__db_user: "mongodb"
+install_mongodb__db_group: "mongodb"
 
-install_mongodb_db_path: "/var/lib/mongodb"
-install_mongodb_log_path: "/var/log/mongodb"
-install_mongodb_log_file: "{{ install_mongodb_log_path }}/mongod.log"
-install_mongodb_ssl_path: "/etc/mongodb/ssl"
+install_mongodb__db_path: "/var/lib/mongodb"
+install_mongodb__log_path: "/var/log/mongodb"
+install_mongodb__log_file: "{{ install_mongodb__log_path }}/mongod.log"
+install_mongodb__ssl_path: "/etc/mongodb/ssl"
 
-install_mongodb_bind: "0.0.0.0"
-install_mongodb_port: 27017
+install_mongodb__bind: "0.0.0.0"
+install_mongodb__port: 27017
 
-install_mongodb_ssl: true
-install_mongodb_ssl_cert: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.crt"
-install_mongodb_ssl_key: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.key"
-install_mongodb_ssl_pem_key_file: "{{ install_mongodb_ssl_path }}/mongodb-pemKeyFile.pem"
-install_mongodb_ssl_client_auth: true
-install_mongodb_ssl_ca: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
-install_mongodb_ssl_ca_file: "{{ install_mongodb_ssl_path }}/mongodb-ca.pem"
+install_mongodb__ssl: true
+install_mongodb__ssl_cert: "{{ install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/my-mongodb-server.domain.tld.pem.crt"
+install_mongodb__ssl_key: "{{ install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/my-mongodb-server.domain.tld.pem.key"
+install_mongodb__ssl_pem_key_file: "{{ install_mongodb__ssl_path }}/mongodb-pemKeyFile.pem"
+install_mongodb__ssl_client_auth: true
+install_mongodb__ssl_ca: "{{ install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/ca-chain.pem.crt"
+install_mongodb__ssl_ca_file: "{{ install_mongodb__ssl_path }}/mongodb-ca.pem"
 
-install_mongodb_admin_login: "admin"
-install_mongodb_admin_password: "admin"
+install_mongodb__admin_login: "admin"
+install_mongodb__admin_password: "admin"

@@ -112,31 +112,31 @@ Some vars a required to run this role:
 
 ```YAML
 ---
-install_mongodb_version: "7.0"
-install_mongodb_distribution_release: "{{ ansible_distribution_release | lower }}"
-install_mongodb_architecture: "{{ ansible_architecture | lower }}"
+install_mongodb__version: "7.0"
+install_mongodb__distribution_release: "{{ ansible_distribution_release | lower }}"
+install_mongodb__architecture: "{{ ansible_architecture | lower }}"
 
-install_mongodb_db_user: "mongodb"
-install_mongodb_db_group: "mongodb"
+install_mongodb__db_user: "mongodb"
+install_mongodb__db_group: "mongodb"
 
-install_mongodb_db_path: "/var/lib/mongodb"
-install_mongodb_log_path: "/var/log/mongodb"
-install_mongodb_log_file: "{{ install_mongodb_log_path }}/mongod.log"
-install_mongodb_ssl_path: "/etc/mongodb/ssl"
+install_mongodb__db_path: "/var/lib/mongodb"
+install_mongodb__log_path: "/var/log/mongodb"
+install_mongodb__log_file: "{{ install_mongodb__log_path }}/mongod.log"
+install_mongodb__ssl_path: "/etc/mongodb/ssl"
 
-install_mongodb_bind: "0.0.0.0"
-install_mongodb_port: 27017
+install_mongodb__bind: "0.0.0.0"
+install_mongodb__port: 27017
 
-install_mongodb_ssl: true
-install_mongodb_ssl_cert: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.crt"
-install_mongodb_ssl_key: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.key"
-install_mongodb_ssl_pem_key_file: "/etc/mongodb-pemKeyFile.pem"
-install_mongodb_ssl_client_auth: true
-install_mongodb_ssl_ca: "{{ install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
-install_mongodb_ssl_ca_file: "/etc/mongodb-ca.pem"
+install_mongodb__ssl: true
+install_mongodb__ssl_cert: "{{ install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/my-mongodb-server.domain.tld.pem.crt"
+install_mongodb__ssl_key: "{{ install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/my-mongodb-server.domain.tld.pem.key"
+install_mongodb__ssl_pem_key_file: "/etc/mongodb-pemKeyFile.pem"
+install_mongodb__ssl_client_auth: true
+install_mongodb__ssl_ca: "{{ install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/ca-chain.pem.crt"
+install_mongodb__ssl_ca_file: "/etc/mongodb-ca.pem"
 
-install_mongodb_admin_login: "admin"
-install_mongodb_admin_password: "admin"
+install_mongodb__admin_login: "admin"
+install_mongodb__admin_password: "admin"
 
 ```
 
@@ -149,35 +149,35 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 ```YAML
 # From inventory
 ---
-inv_install_mongodb_prepare_host_users:
+inv_install_mongodb__prepare_host__users:
   - login: "mongodb"
     group: "mongodb"
 
-inv_install_mongodb_version: "7.0"
-inv_install_mongodb_distribution_release: "{{ ansible_distribution_release | lower }}"
-inv_install_mongodb_architecture: "{{ ansible_architecture | lower }}"
+inv_install_mongodb__version: "7.0"
+inv_install_mongodb__distribution_release: "{{ ansible_distribution_release | lower }}"
+inv_install_mongodb__architecture: "{{ ansible_architecture | lower }}"
 
-inv_install_mongodb_db_user: "mongodb"
-inv_install_mongodb_db_group: "mongodb"
+inv_install_mongodb__db_user: "mongodb"
+inv_install_mongodb__db_group: "mongodb"
 
-inv_install_mongodb_db_path: "/var/lib/mongodb"
-inv_install_mongodb_log_path: "/var/log/mongodb"
-inv_install_mongodb_log_file: "{{ inv_install_mongodb_log_path }}/mongod.log"
-inv_install_mongodb_ssl_path: "/etc/mongodb/ssl"
+inv_install_mongodb__db_path: "/var/lib/mongodb"
+inv_install_mongodb__log_path: "/var/log/mongodb"
+inv_install_mongodb__log_file: "{{ inv_install_mongodb__log_path }}/mongod.log"
+inv_install_mongodb__ssl_path: "/etc/mongodb/ssl"
 
-inv_install_mongodb_bind: "0.0.0.0"
-inv_install_mongodb_port: 27017
+inv_install_mongodb__bind: "0.0.0.0"
+inv_install_mongodb__port: 27017
 
-inv_install_mongodb_ssl: true
-inv_install_mongodb_ssl_cert: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.crt"
-inv_install_mongodb_ssl_key: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/my-mongodb-cluster.domain.tld.pem.key"
-inv_install_mongodb_ssl_pem_key_file: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/pemKeyFile.pem"
-inv_install_mongodb_ssl_client_auth: true
-inv_install_mongodb_ssl_ca: "{{ inv_install_mongodb_ssl_path }}/my-mongodb-cluster.domain.tld/ca-chain.pem.crt"
-inv_install_mongodb_ssl_ca_file: "/etc/mongodb-ca.pem"
+inv_install_mongodb__ssl: true
+inv_install_mongodb__ssl_cert: "{{ inv_install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/my-mongodb-server.domain.tld.pem.crt"
+inv_install_mongodb__ssl_key: "{{ inv_install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/my-mongodb-server.domain.tld.pem.key"
+inv_install_mongodb__ssl_pem_key_file: "{{ inv_install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/pemKeyFile.pem"
+inv_install_mongodb__ssl_client_auth: true
+inv_install_mongodb__ssl_ca: "{{ inv_install_mongodb__ssl_path }}/my-mongodb-server.domain.tld/ca-chain.pem.crt"
+inv_install_mongodb__ssl_ca_file: "/etc/mongodb-ca.pem"
 
-inv_install_mongodb_admin_login: "admin"
-inv_install_mongodb_admin_password: "admin"
+inv_install_mongodb__admin_login: "admin"
+inv_install_mongodb__admin_password: "admin"
 
 ```
 
@@ -196,26 +196,26 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
   tags:
     - "labocbz.install_mongodb"
   vars:
-    install_mongodb_version: "{{ inv_install_mongodb_version }}"
-    install_mongodb_distribution_release: "{{ inv_install_mongodb_distribution_release }}"
-    install_mongodb_architecture: "{{ inv_install_mongodb_architecture }}"
-    install_mongodb_db_user: "{{ inv_install_mongodb_db_user }}"
-    install_mongodb_db_group: "{{ inv_install_mongodb_db_group }}"
-    install_mongodb_db_path: "{{ inv_install_mongodb_db_path }}"
-    install_mongodb_log_path: "{{ inv_install_mongodb_log_path }}"
-    install_mongodb_log_file: "{{ inv_install_mongodb_log_file }}"
-    install_mongodb_ssl_path: "{{ inv_install_mongodb_ssl_path }}"
-    install_mongodb_bind: "{{ inv_install_mongodb_bind }}"
-    install_mongodb_port: "{{ inv_install_mongodb_port }}"
-    install_mongodb_ssl: "{{ inv_install_mongodb_ssl }}"
-    install_mongodb_ssl_cert: "{{ inv_install_mongodb_ssl_cert }}"
-    install_mongodb_ssl_key: "{{ inv_install_mongodb_ssl_key }}"
-    install_mongodb_ssl_pem_key_file: "{{ inv_install_mongodb_ssl_pem_key_file }}"
-    install_mongodb_ssl_client_auth: "{{ inv_install_mongodb_ssl_client_auth }}"
-    install_mongodb_ssl_ca: "{{ inv_install_mongodb_ssl_ca }}"
-    install_mongodb_admin_login: "{{ inv_install_mongodb_admin_login }}"
-    install_mongodb_admin_password: "{{ inv_install_mongodb_admin_password }}"
-    inv_install_mongodb_ssl_ca_file: "{{ inv_install_mongodb_ssl_ca_file }}"
+    install_mongodb__version: "{{ inv_install_mongodb__version }}"
+    install_mongodb__distribution_release: "{{ inv_install_mongodb__distribution_release }}"
+    install_mongodb__architecture: "{{ inv_install_mongodb__architecture }}"
+    install_mongodb__db_user: "{{ inv_install_mongodb__db_user }}"
+    install_mongodb__db_group: "{{ inv_install_mongodb__db_group }}"
+    install_mongodb__db_path: "{{ inv_install_mongodb__db_path }}"
+    install_mongodb__log_path: "{{ inv_install_mongodb__log_path }}"
+    install_mongodb__log_file: "{{ inv_install_mongodb__log_file }}"
+    install_mongodb__ssl_path: "{{ inv_install_mongodb__ssl_path }}"
+    install_mongodb__bind: "{{ inv_install_mongodb__bind }}"
+    install_mongodb__port: "{{ inv_install_mongodb__port }}"
+    install_mongodb__ssl: "{{ inv_install_mongodb__ssl }}"
+    install_mongodb__ssl_cert: "{{ inv_install_mongodb__ssl_cert }}"
+    install_mongodb__ssl_key: "{{ inv_install_mongodb__ssl_key }}"
+    install_mongodb__ssl_pem_key_file: "{{ inv_install_mongodb__ssl_pem_key_file }}"
+    install_mongodb__ssl_client_auth: "{{ inv_install_mongodb__ssl_client_auth }}"
+    install_mongodb__ssl_ca: "{{ inv_install_mongodb__ssl_ca }}"
+    install_mongodb__admin_login: "{{ inv_install_mongodb__admin_login }}"
+    install_mongodb__admin_password: "{{ inv_install_mongodb__admin_password }}"
+    inv_install_mongodb__ssl_ca_file: "{{ inv_install_mongodb__ssl_ca_file }}"
   ansible.builtin.include_role:
     name: "labocbz.install_mongodb"
 ```
@@ -249,6 +249,18 @@ Here you can put your change to keep a trace of your work and decisions.
 ### 2023-12-14: System users
 
 * Role can now use system users and address groups
+
+### 2024-02-22: New CICD and fixes
+
+* Added support for Ubuntu 22
+* Added support for Debian 11/22
+* Edited vars for linting (role name and __)
+* Added generic support for Docker dind (can add used for obscures reasons ... user in use)
+* Fix idempotency
+* Added informations for UID and GID for user/groups
+* Added support for user password creation (on_create)
+* New CI, need work on tag and releases
+* CI use now Sonarqube
 
 ## Authors
 
