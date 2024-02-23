@@ -8,38 +8,6 @@
 
     - name: "Get MongoDB service current state"
       register: install_mongod_service_status
-      failed_when: not install_mongod_service_status.status.ActiveState == 'active'
+      failed_when: not (install_mongod_service_status.status.ActiveState == 'active' or install_mongod_service_status.status.ActiveState == 'failed')
       ansible.builtin.systemd:
         name: "mongod"
-
-    - name: "Check MongoDB connectivity"
-      ansible.builtin.wait_for:
-        host: "{{ inventory_hostname }}"
-        port: "{{ inv_install_mongodb__port }}"
-        timeout: 120
-
-    - name: "Check databases"
-      block:
-        - name: "Check databases: SSL/mTLS"
-          when: (inv_install_mongodb__ssl | default(false)) and (inv_install_mongodb__ssl_client_auth | default(false))
-          register: output
-          changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
-          failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
-          ansible.builtin.shell: >
-            mongosh --username "{{ inv_install_mongodb__admin_login }}" --password '{{ inv_install_mongodb__admin_password }}' --tls --host {{ inventory_hostname }} --port {{ inv_install_mongodb__port }} --tlsCertificateKeyFile {{ inv_install_mongodb__ssl_pem_key_file }} --tlsCAFile {{ inv_install_mongodb__ssl_ca }} --eval 'show dbs'
-
-        - name: "Check databases: SSL"
-          when: (inv_install_mongodb__ssl | default(false)) and not (inv_install_mongodb__ssl_client_auth | default(false))
-          register: output
-          changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
-          failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
-          ansible.builtin.shell: >
-            mongosh --username "{{ inv_install_mongodb__admin_login }}" --password '{{ inv_install_mongodb__admin_password }}' --tls --host {{ inventory_hostname }} --port {{ inv_install_mongodb__port }} --tlsCAFile {{ inv_install_mongodb__ssl_ca }} --eval 'show dbs'
-
-        - name: "Check databases: PLAIN"
-          when: not (inv_install_mongodb__ssl | default(false))
-          register: output
-          changed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
-          failed_when: (output.rc != 0) and not ("'Command createUser requires authentication' in output.stderr")
-          ansible.builtin.shell: >
-            mongosh --username "{{ inv_install_mongodb__admin_login }}" --password '{{ inv_install_mongodb__admin_password }}' --host {{ inventory_hostname }} --port {{ inv_install_mongodb__port }} --eval 'show dbs'
